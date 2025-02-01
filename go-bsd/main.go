@@ -32,9 +32,9 @@ func main() {
 
 	b := bin.NewBinary()
 
-	s := socket.NewServer()
+	ss := socket.NewServer()
 
-	h := handler.NewHandler(b, q, s)
+	h := handler.NewHandler(b, q, ss)
 
 	r := chi.NewRouter()
 	r.Use(cors.Handler(cors.Options{

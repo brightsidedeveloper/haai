@@ -12,10 +12,10 @@ type Handler struct {
 	ss    *socket.Server
 }
 
-func NewHandler(b *bin.Bin, q *query.Queries, s *socket.Server) *Handler {
+func NewHandler(b *bin.Bin, q *query.Queries, ss *socket.Server) *Handler {
 	return &Handler{
 		bin:   b,
 		query: q,
-		ss:    s,
+		ss:    ss,
 	}
 }
