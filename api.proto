@@ -1,0 +1,67 @@
+syntax = "proto3";
+
+package buf;
+
+option go_package = "/buf";
+
+message Error {
+  string message = 1;
+}
+
+message User {
+  int32 id = 1;
+  string name = 2;
+}
+
+message Users {
+  repeated User users = 1;
+}
+
+// Socket
+enum SocketMessageType {
+  SET_NAME = 0;
+  CREATE_ROOM = 1;
+  JOIN_ROOM = 2;
+  LEAVE_ROOM = 3;
+  ERROR = 4;
+}
+
+message WSMessage {
+  SocketMessageType type = 1;
+  oneof payload {
+    SetNameRequest set_name = 2;
+    CreateRoomRequest create_room = 3;
+    JoinRoomRequest join_room = 4;
+    Error error = 5;
+  }
+}
+
+
+message SetNameRequest {
+  string name = 2;
+}
+
+message CreateRoomRequest {
+  string name = 1;
+}
+
+message JoinRoomRequest {
+  string id = 1;
+}
+
+message Room {
+  string id = 1;
+  string name = 2;
+}
+
+message CreateRoomResponse {
+  Room room = 1;
+}
+
+// Also API
+message GetRooms {
+  repeated Room rooms = 1;
+}
+
+
+
