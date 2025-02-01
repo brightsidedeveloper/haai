@@ -108,6 +108,14 @@ export interface GetRooms {
   rooms: Room[];
 }
 
+export interface AIRequest {
+  prompt: string;
+}
+
+export interface AIResponse {
+  response: string;
+}
+
 function createBaseError(): Error {
   return { message: "" };
 }
@@ -792,6 +800,122 @@ export const GetRooms: MessageFns<GetRooms> = {
   fromPartial<I extends Exact<DeepPartial<GetRooms>, I>>(object: I): GetRooms {
     const message = createBaseGetRooms();
     message.rooms = object.rooms?.map((e) => Room.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseAIRequest(): AIRequest {
+  return { prompt: "" };
+}
+
+export const AIRequest: MessageFns<AIRequest> = {
+  encode(message: AIRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.prompt !== "") {
+      writer.uint32(10).string(message.prompt);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): AIRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseAIRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.prompt = reader.string();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): AIRequest {
+    return { prompt: isSet(object.prompt) ? globalThis.String(object.prompt) : "" };
+  },
+
+  toJSON(message: AIRequest): unknown {
+    const obj: any = {};
+    if (message.prompt !== "") {
+      obj.prompt = message.prompt;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<AIRequest>, I>>(base?: I): AIRequest {
+    return AIRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<AIRequest>, I>>(object: I): AIRequest {
+    const message = createBaseAIRequest();
+    message.prompt = object.prompt ?? "";
+    return message;
+  },
+};
+
+function createBaseAIResponse(): AIResponse {
+  return { response: "" };
+}
+
+export const AIResponse: MessageFns<AIResponse> = {
+  encode(message: AIResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.response !== "") {
+      writer.uint32(10).string(message.response);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): AIResponse {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseAIResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.response = reader.string();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): AIResponse {
+    return { response: isSet(object.response) ? globalThis.String(object.response) : "" };
+  },
+
+  toJSON(message: AIResponse): unknown {
+    const obj: any = {};
+    if (message.response !== "") {
+      obj.response = message.response;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<AIResponse>, I>>(base?: I): AIResponse {
+    return AIResponse.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<AIResponse>, I>>(object: I): AIResponse {
+    const message = createBaseAIResponse();
+    message.response = object.response ?? "";
     return message;
   },
 };

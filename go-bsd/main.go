@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"server/internal/ai"
 	"server/internal/bin"
 	"server/internal/handler"
 	"server/internal/query"
@@ -28,13 +29,15 @@ func main() {
 		log.Fatal(err)
 	}
 
+	ai := ai.New()
+
 	q := query.New(conn)
 
 	b := bin.NewBinary()
 
 	ss := socket.NewServer()
 
-	h := handler.NewHandler(b, q, ss)
+	h := handler.NewHandler(b, q, ss, ai)
 
 	r := chi.NewRouter()
 	r.Use(cors.Handler(cors.Options{

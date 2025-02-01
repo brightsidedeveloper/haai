@@ -8,15 +8,19 @@ import (
 
 func MountRoutes(r chi.Router, h *handler.Handler) {
 
-	api := chi.NewRouter()
-	api.Get("/users", h.GetUsers)
-	api.Post("/user", h.PostUser)
+	ai := chi.NewRouter()
+	ai.Post("/prompt", h.PostPrompt)
 
 	game := chi.NewRouter()
 	game.Get("/rooms", h.GetRooms)
 
+	api := chi.NewRouter()
+	api.Mount("/ai", ai)
 	api.Mount("/game", game)
-	r.Mount("/api", api)
 
+	api.Get("/users", h.GetUsers)
+	api.Post("/user", h.PostUser)
+
+	r.Mount("/api", api)
 	r.Get("/ws", h.HandleConnections)
 }
